@@ -10,5 +10,7 @@ data class Wallet(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val type: WalletType,
-    val balance: Double = 0.0
+    val balance: Double = 0.0,
+    val sourcePackage: String? = null,
+    val createdAt: Long = System.currentTimeMillis()
 )
