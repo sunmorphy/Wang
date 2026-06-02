@@ -11,8 +11,6 @@ val appModule = module {
     single { PreferenceManager(androidContext()) }
 
     single {
-        // Note: In a real app, passphrase should be handled securely.
-        // For now, we use a hardcoded one as per the initial setup.
         val passphrase = BuildConfig.PASSPHRASE.toByteArray()
         DatabaseModule.getDatabase(androidContext(), passphrase)
     }

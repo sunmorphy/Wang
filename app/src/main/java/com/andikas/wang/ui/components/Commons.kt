@@ -9,6 +9,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Surface
+import androidx.compose.ui.tooling.preview.Preview
+import com.andikas.wang.ui.theme.WangTheme
+
 @Composable
 fun WangRing(
     modifier: Modifier = Modifier,
@@ -24,5 +30,33 @@ fun WangRing(
             radius = radius,
             style = Stroke(width = strokeWidthPx)
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WangRingPreview() {
+    WangTheme {
+        Surface {
+            WangRing(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(100.dp)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun WangRingDarkPreview() {
+    WangTheme {
+        Surface {
+            WangRing(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(100.dp)
+            )
+        }
     }
 }
