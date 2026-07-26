@@ -25,7 +25,7 @@ sealed class Screen {
     @Serializable
     data object Transaction : Screen()
     @Serializable
-    data object TransactionDetail : Screen()
+    data class TransactionDetail(val id: Long) : Screen()
     @Serializable
     data object TransactionSetup : Screen()
     @Serializable

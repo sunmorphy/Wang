@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">Wang</string>
+    
+    <!-- General -->
+    <string name="go_back">Back</string>
+    
+    <!-- Analytics Screen -->
+    <string name="analytics_title">Analytics</string>
+    <string name="period_weekly">This Week</string>
+    <string name="period_monthly">This Month</string>
+    <string name="period_annual">This Year</string>
+    <string name="expenditure_breakdown">Where Your Money Goes</string>
+    <string name="total_out">Spent</string>
+    <string name="no_analytics_data">Nothing here yet! Try another period.</string>
+    <string name="spending_trends">Spending Trends</string>
+    <string name="top_merchants">Where You Spend Most</string>
+    <string name="no_merchants">No payees logged yet. Time to add one!</string>
+    <string name="detected_subscriptions">Subscriptions</string>
+    <string name="subscription_estimated_date">Next up: %1$s (every %2$d days)</string>
+    <string name="no_subscriptions">No active subscriptions detected.</string>
+    
+    <!-- Transactions Screen -->
+    <string name="transactions_title">Transactions</string>
+    <string name="search_placeholder">Search for anything…</string>
+    <string name="filter_all">All</string>
+    <string name="filter_expenses">Out</string>
+    <string name="filter_income">In</string>
+    <string name="no_transactions_found">Oops, couldn\'t find that transaction!</string>
+    
+    <!-- Transaction Detail Screen -->
+    <string name="transaction_not_found">We couldn\'t find this transaction.</string>
+    <string name="close">Close</string>
+    <string name="delete_transaction">Delete Transaction</string>
+    <string name="details_title">Details</string>
+    <string name="detail_date">Date</string>
+    <string name="detail_time">Time</string>
+    <string name="detail_type">Type</string>
+    <string name="detail_wallet">Wallet</string>
+    <string name="notes_tags_title">Notes &amp; Tags</string>
+    <string name="share_transaction">Share Transaction</string>
+    <string name="share_alert_template">Hey! Just spent %1$s at %2$s on %3$s with Wang.</string>
 </resources>

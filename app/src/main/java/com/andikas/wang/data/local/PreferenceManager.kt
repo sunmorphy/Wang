@@ -19,6 +19,7 @@ class PreferenceManager(private val context: Context) {
         val PIN_KEY = stringPreferencesKey("pin")
         val LANGUAGE_KEY = stringPreferencesKey("language")
         val CURRENCY_KEY = stringPreferencesKey("currency")
+        val IS_FIN_UNLOCKED = booleanPreferencesKey("is_fin_unlocked")
     }
 
     val isOnboardingCompleted: Flow<Boolean> =
@@ -26,6 +27,8 @@ class PreferenceManager(private val context: Context) {
     val pin: Flow<String?> = context.dataStore.data.map { it[PIN_KEY] }
     val selectedLanguage: Flow<String> = context.dataStore.data.map { it[LANGUAGE_KEY] ?: "en" }
     val selectedCurrency: Flow<String> = context.dataStore.data.map { it[CURRENCY_KEY] ?: "IDR" }
+    val isFinUnlocked: Flow<Boolean> =
+        context.dataStore.data.map { it[IS_FIN_UNLOCKED] ?: false }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {
         context.dataStore.edit { it[IS_ONBOARDING_COMPLETED] = completed }
@@ -42,4 +45,9 @@ class PreferenceManager(private val context: Context) {
     suspend fun saveCurrency(currency: String) {
         context.dataStore.edit { it[CURRENCY_KEY] = currency }
     }
+
+    suspend fun setFinUnlocked(unlocked: Boolean) {
+        context.dataStore.edit { it[IS_FIN_UNLOCKED] = unlocked }
+    }
 }
+

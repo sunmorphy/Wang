@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Wang</string>
+    
+    <!-- General -->
+    <string name="go_back">Kembali</string>
+    
+    <!-- Analytics Screen -->
+    <string name="analytics_title">Analisis</string>
+    <string name="period_weekly">Minggu Ini</string>
+    <string name="period_monthly">Bulan Ini</string>
+    <string name="period_annual">Tahun Ini</string>
+    <string name="expenditure_breakdown">Uangmu Keluar Kemana?</string>
+    <string name="total_out">Total Keluar</string>
+    <string name="no_analytics_data">Belum ada catatan nih untuk periode ini!</string>
+    <string name="spending_trends">Tren Pengeluaran</string>
+    <string name="top_merchants">Tempat Belanja Terfavorit</string>
+    <string name="no_merchants">Belum ada transaksi belanja tercatat.</string>
+    <string name="detected_subscriptions">Tagihan Bulanan</string>
+    <string name="subscription_estimated_date">Bayar lagi tanggal %1$s (tiap %2$d hari)</string>
+    <string name="no_subscriptions">Belum nemu tagihan langganan nih.</string>
+    
+    <!-- Transactions Screen -->
+    <string name="transactions_title">Transaksi</string>
+    <string name="search_placeholder">Cari transaksi apa aja…</string>
+    <string name="filter_all">Semua</string>
+    <string name="filter_expenses">Keluar</string>
+    <string name="filter_income">Masuk</string>
+    <string name="no_transactions_found">Duh, transaksinya nggak ketemu!</string>
+    
+    <!-- Transaction Detail Screen -->
+    <string name="transaction_not_found">Duh, detail transaksinya nggak ada.</string>
+    <string name="close">Tutup</string>
+    <string name="delete_transaction">Hapus Transaksi</string>
+    <string name="details_title">Detail Lengkap</string>
+    <string name="detail_date">Tanggal</string>
+    <string name="detail_time">Jam</string>
+    <string name="detail_type">Tipe</string>
+    <string name="detail_wallet">Sumber Dana</string>
+    <string name="notes_tags_title">Catatan &amp; Tag</string>
+    <string name="share_transaction">Bagikan Transaksi</string>
+    <string name="share_alert_template">Halo! Baru aja bayar %1$s di %2$s tanggal %3$s tercatat di Wang.</string>
+</resources>
