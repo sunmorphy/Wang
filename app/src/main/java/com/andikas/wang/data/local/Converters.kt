@@ -1,7 +1,9 @@
 package com.andikas.wang.data.local
 
 import androidx.room.TypeConverter
-import com.andikas.wang.data.model.*
+import com.andikas.wang.data.model.GoalCategory
+import com.andikas.wang.data.model.TransactionType
+import com.andikas.wang.data.model.WalletType
 
 class Converters {
     @TypeConverter
@@ -32,15 +34,5 @@ class Converters {
         GoalCategory.valueOf(value)
     } catch (e: Exception) {
         GoalCategory.GENERAL
-    }
-
-    @TypeConverter
-    fun fromRecommendationSource(source: RecommendationSource): String = source.name
-
-    @TypeConverter
-    fun toRecommendationSource(value: String): RecommendationSource = try {
-        RecommendationSource.valueOf(value)
-    } catch (e: Exception) {
-        RecommendationSource.OFFLINE
     }
 }

@@ -13,7 +13,6 @@ import com.andikas.wang.data.model.*
         Budget::class,
         Goal::class,
         UserPreferences::class,
-        Recommendation::class
     ],
     version = 1,
     exportSchema = false
@@ -24,5 +23,4 @@ abstract class WangDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun goalDao(): GoalDao
     abstract fun transactionDao(): TransactionDao
-    abstract fun recommendationDao(): RecommendationDao
 }
