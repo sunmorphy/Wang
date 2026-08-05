@@ -13,12 +13,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -31,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.AnnotatedString
@@ -40,16 +48,20 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cafe.adriel.lyricist.LocalStrings
+import com.andikas.wang.domain.model.vo.CurrencyType
+import com.andikas.wang.domain.model.vo.SelectableOption
 import com.andikas.wang.ui.theme.WangTheme
-import com.andikas.wang.vo.CurrencyType
+import com.andikas.wang.ui.utils.bottomBorder
 import java.util.Locale
 
 private val ComponentRadius = 24.dp
 private val ComponentShape = RoundedCornerShape(ComponentRadius)
 
 @Composable
-fun WangInputButton(
+fun WInputButton(
     label: String,
     value: String,
     onClick: () -> Unit,
@@ -60,7 +72,7 @@ fun WangInputButton(
     Column(modifier = modifier) {
         Text(
             text = label,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
         )
@@ -95,7 +107,7 @@ fun WangInputButton(
 }
 
 @Composable
-fun WangTextField(
+fun WTextField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -107,7 +119,7 @@ fun WangTextField(
     Column(modifier = modifier) {
         Text(
             text = label,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
         )
@@ -116,12 +128,12 @@ fun WangTextField(
             value = value,
             onValueChange = onValueChange,
             enabled = enabled,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.primary),
+            textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
-                .clip(ComponentShape)
+                .height(48.dp)
+                .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer),
             decorationBox = { innerTextField ->
                 Row(
@@ -155,7 +167,142 @@ fun WangTextField(
 }
 
 @Composable
-fun WangTextArea(
+fun <T : SelectableOption> WDropdownField(
+    label: String,
+    options: List<T>,
+    selectedOption: T?,
+    onOptionSelected: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: String = "",
+    leadingIcon: ImageVector? = null,
+    enabled: Boolean = true,
+    dropdownHeight: Dp = 256.dp
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val strings = LocalStrings.current
+
+    Column(modifier = modifier) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+        )
+
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(
+                        if (expanded) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                        else MaterialTheme.colorScheme.surfaceContainer
+                    )
+                    .clickable(enabled = enabled) { expanded = !expanded }
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val currentIcon = selectedOption?.icon ?: leadingIcon
+                        if (currentIcon != null) {
+                            Icon(
+                                imageVector = currentIcon,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                        }
+
+                        Text(
+                            text = selectedOption?.getLocalizedLabel(
+                                strings
+                            ) ?: placeholder,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (selectedOption != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .fillMaxWidth(fraction = 0.85f)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .height(dropdownHeight)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    options.forEach { option ->
+                        val isSelected = option == selectedOption
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = option.getLocalizedLabel(strings),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = option.icon,
+                                    contentDescription = null,
+                                    tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            },
+                            trailingIcon = if (isSelected) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Rounded.CheckCircle,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            } else null,
+                            onClick = {
+                                onOptionSelected(option)
+                                expanded = false
+                            },
+                            modifier = Modifier.background(
+                                color =
+                                    if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(
+                                        alpha = 0.3f
+                                    )
+                                    else Color.Transparent
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun WTextArea(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -168,7 +315,7 @@ fun WangTextArea(
     Column(modifier = modifier) {
         Text(
             text = label,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
         )
@@ -219,8 +366,8 @@ fun WangTextArea(
 }
 
 @Composable
-fun WangCurrencyInput(
-    label: String,
+fun WCurrencyInput(
+    label: String?,
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -236,13 +383,15 @@ fun WangCurrencyInput(
         else -> MaterialTheme.typography.headlineSmall
     }.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
 
-    Column(modifier = modifier) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(start = 8.dp)
-        )
+    Column(modifier = modifier.bottomBorder(1.dp, MaterialTheme.colorScheme.primary)) {
+        label?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
 
         BasicTextField(
             value = value,
@@ -272,7 +421,7 @@ fun WangCurrencyInput(
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Text(
-                        text = currencyType.prefix,
+                        text = currencyType.id,
                         style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.secondary
                     )
@@ -372,19 +521,20 @@ private fun InputsPreviewContent() {
     var note by remember { mutableStateOf("") }
     var amountIdr by remember { mutableStateOf("150000") }
     var amountUsd by remember { mutableStateOf("12.50") }
+    var selectedCurrency by remember { mutableStateOf<CurrencyType?>(null) }
 
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        WangInputButton(
+        WInputButton(
             label = "Date",
             value = "12 Oct 2023",
             onClick = {},
             leadingIcon = Icons.Default.DateRange
         )
 
-        WangTextField(
+        WTextField(
             label = "Name",
             value = name,
             onValueChange = { name = it },
@@ -392,21 +542,30 @@ private fun InputsPreviewContent() {
             leadingIcon = Icons.Default.Person
         )
 
-        WangTextArea(
+        WDropdownField(
+            label = "Category",
+            options = CurrencyType.entries,
+            selectedOption = selectedCurrency,
+            onOptionSelected = { selectedCurrency = it },
+            placeholder = "Choose category",
+            leadingIcon = Icons.Rounded.Category
+        )
+
+        WTextArea(
             label = "Note",
             value = note,
             onValueChange = { note = it },
             placeholder = "Add a note..."
         )
 
-        WangCurrencyInput(
+        WCurrencyInput(
             label = "Amount",
             value = amountIdr,
             onValueChange = { amountIdr = it },
             currencyType = CurrencyType.IDR
         )
 
-        WangCurrencyInput(
+        WCurrencyInput(
             label = "Amount (USD)",
             value = amountUsd,
             onValueChange = { amountUsd = it },

@@ -15,11 +15,7 @@ kotlin {
 
 android {
     namespace = "com.andikas.wang"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     val localProperties = Properties()
     val localPropertiesFile = rootProject.file("local.properties")
@@ -30,13 +26,17 @@ android {
     defaultConfig {
         applicationId = "com.andikas.wang"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "PASSPHRASE", "\"${localProperties.getProperty("passphraseKey")}\"")
+        buildConfigField(
+            "String",
+            "PASSPHRASE",
+            "\"${localProperties.getProperty("passphraseKey")}\""
+        )
     }
 
     signingConfigs {
@@ -120,6 +120,7 @@ dependencies {
     implementation(libs.koin.compose.navigation)
 
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.ai)
@@ -135,16 +136,20 @@ dependencies {
     implementation(libs.sqlite)
 
     implementation(libs.datastore.preferences)
+    implementation(libs.datastore)
+    implementation(libs.tink.android)
 
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.biometric)
 
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
-    implementation(libs.vico.core)
 
     implementation(libs.lyricist)
-    implementation(libs.lyricist.processor)
+    ksp(libs.lyricist.processor)
+
+    implementation(libs.protobuf.javalite)
+    implementation(libs.protobuf.kotlin.lite)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

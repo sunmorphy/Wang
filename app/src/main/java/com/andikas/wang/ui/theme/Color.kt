@@ -1,4 +1,5 @@
 package com.andikas.wang.ui.theme
+
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF556423)
@@ -17,6 +18,18 @@ val errorLight = Color(0xFFBA1A1A)
 val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF93000A)
+val successLight = Color(0xFF386A20)
+val onSuccessLight = Color(0xFFFFFFFF)
+val successContainerLight = Color(0xFFB8F397)
+val onSuccessContainerLight = Color(0xFF042100)
+val warningLight = Color(0xFF8B5000)
+val onWarningLight = Color(0xFFFFFFFF)
+val warningContainerLight = Color(0xFFFFDCC1)
+val onWarningContainerLight = Color(0xFF2E1600)
+val infoLight = Color(0xFF00668B)
+val onInfoLight = Color(0xFFFFFFFF)
+val infoContainerLight = Color(0xFFC7E7FF)
+val onInfoContainerLight = Color(0xFF001E2D)
 val backgroundLight = Color(0xFFFBFAED)
 val onBackgroundLight = Color(0xFF1B1C15)
 val surfaceLight = Color(0xFFFBFAED)
@@ -125,6 +138,18 @@ val errorDark = Color(0xFFFFB4AB)
 val onErrorDark = Color(0xFF690005)
 val errorContainerDark = Color(0xFF93000A)
 val onErrorContainerDark = Color(0xFFFFDAD6)
+val successDark = Color(0xFF9DD67D)
+val onSuccessDark = Color(0xFF0D3900)
+val successContainerDark = Color(0xFF205108)
+val onSuccessContainerDark = Color(0xFFB8F397)
+val warningDark = Color(0xFFFFB870)
+val onWarningDark = Color(0xFF4A2800)
+val warningContainerDark = Color(0xFF6A3C00)
+val onWarningContainerDark = Color(0xFFFFDCC1)
+val infoDark = Color(0xFF86CFFF)
+val onInfoDark = Color(0xFF00344A)
+val infoContainerDark = Color(0xFF004C69)
+val onInfoContainerDark = Color(0xFFC7E7FF)
 val backgroundDark = Color(0xFF13140D)
 val onBackgroundDark = Color(0xFFE4E3D7)
 val surfaceDark = Color(0xFF13140D)
@@ -216,10 +241,3 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1F2019)
 val surfaceContainerDarkHighContrast = Color(0xFF303129)
 val surfaceContainerHighDarkHighContrast = Color(0xFF3B3C34)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF46473F)
-
-
-
-
-
-
-

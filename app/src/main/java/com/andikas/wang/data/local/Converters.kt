@@ -1,9 +1,8 @@
 package com.andikas.wang.data.local
 
 import androidx.room.TypeConverter
-import com.andikas.wang.data.model.GoalCategory
-import com.andikas.wang.data.model.TransactionType
-import com.andikas.wang.data.model.WalletType
+import com.andikas.wang.domain.model.vo.TransactionType
+import com.andikas.wang.domain.model.vo.WalletType
 
 class Converters {
     @TypeConverter
@@ -13,7 +12,7 @@ class Converters {
     fun toTransactionType(value: String): TransactionType = try {
         TransactionType.valueOf(value)
     } catch (e: Exception) {
-        TransactionType.PAYMENT
+        TransactionType.EXPENSE
     }
 
     @TypeConverter
@@ -24,15 +23,5 @@ class Converters {
         WalletType.valueOf(value)
     } catch (e: Exception) {
         WalletType.CASH
-    }
-
-    @TypeConverter
-    fun fromGoalCategory(category: GoalCategory): String = category.name
-
-    @TypeConverter
-    fun toGoalCategory(value: String): GoalCategory = try {
-        GoalCategory.valueOf(value)
-    } catch (e: Exception) {
-        GoalCategory.GENERAL
     }
 }

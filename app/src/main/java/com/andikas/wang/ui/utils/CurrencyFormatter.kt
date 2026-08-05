@@ -30,7 +30,7 @@ object CurrencyFormatter {
             }
             
             formatter.format(amount)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Fallback to custom formatting
             val symbol = when (currencyCode.uppercase()) {
                 "IDR" -> "Rp"

@@ -1,2 +1,0 @@
-package com.andikas.wang.ui.setup
-

@@ -82,7 +82,6 @@ fun WangHeader(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun WangHeaderInteractivePreview() {
@@ -95,7 +94,7 @@ fun WangHeaderInteractivePreview() {
                 WangHeader(
                     startContent = if (showStart) {
                         {
-                            WangIconButton(
+                            WIconButton(
                                 imageVector = Icons.Default.Menu,
                                 onClick = { showStart = false },
                                 useBackground = false
@@ -104,7 +103,7 @@ fun WangHeaderInteractivePreview() {
                     } else null,
                     endContent = if (showEnd) {
                         {
-                            WangIconButton(
+                            WIconButton(
                                 imageVector = Icons.Default.Notifications,
                                 onClick = { showEnd = false },
                                 useBackground = false
@@ -117,11 +116,11 @@ fun WangHeaderInteractivePreview() {
                     modifier = Modifier.padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    WangSecondaryButton(
+                    WSecondaryButton(
                         text = "Toggle Start",
                         onClick = { showStart = !showStart }
                     )
-                    WangSecondaryButton(
+                    WSecondaryButton(
                         text = "Toggle End",
                         onClick = { showEnd = !showEnd }
                     )
@@ -161,7 +160,7 @@ private fun WangHeaderPreviewContent() {
 
         WangHeader(
             startContent = {
-                WangIconButton(
+                WIconButton(
                     imageVector = Icons.Default.Menu,
                     onClick = {},
                     useBackground = true
@@ -171,7 +170,7 @@ private fun WangHeaderPreviewContent() {
 
         WangHeader(
             endContent = {
-                WangIconButton(
+                WIconButton(
                     imageVector = Icons.Default.Notifications,
                     onClick = {},
                     useBackground = false
@@ -181,14 +180,14 @@ private fun WangHeaderPreviewContent() {
 
         WangHeader(
             startContent = {
-                WangIconButton(
+                WIconButton(
                     imageVector = Icons.Default.Menu,
                     onClick = {},
                     useBackground = false
                 )
             },
             endContent = {
-                WangIconButton(
+                WIconButton(
                     imageVector = Icons.Default.Notifications,
                     onClick = {},
                     useBackground = false

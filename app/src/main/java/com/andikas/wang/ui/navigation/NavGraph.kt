@@ -8,7 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.andikas.wang.data.local.PreferenceManager
 import com.andikas.wang.ui.onboarding.OnboardingScreen
-import com.andikas.wang.ui.onboarding.SplashScreen
+import com.andikas.wang.ui.setup.SetupScreen
+import com.andikas.wang.ui.splash.SplashScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -36,6 +37,14 @@ fun NavGraph(
         }
         composable<Screen.Onboarding> {
             OnboardingScreen(
+                onFinished = {
+                    navController.popBackStack()
+                    navController.navigate(Screen.Setup)
+                }
+            )
+        }
+        composable<Screen.Setup> {
+            SetupScreen(
                 onFinished = {
                     navController.popBackStack()
                     navController.navigate(Screen.Main)

@@ -9,6 +9,8 @@ sealed class Screen {
     @Serializable
     data object Onboarding : Screen()
     @Serializable
+    data object Setup : Screen()
+    @Serializable
     data object BudgetSetup : Screen()
     @Serializable
     data object Main : Screen()
