@@ -14,10 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Restaurant
-import androidx.compose.material.icons.rounded.ShoppingBag
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,19 +31,23 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cafe.adriel.lyricist.LocalStrings
+import com.andikas.wang.domain.model.vo.CurrencyType
+import com.andikas.wang.domain.model.vo.SelectableOption
+import com.andikas.wang.domain.model.vo.WalletType
 import com.andikas.wang.ui.theme.WangTheme
 
 private val ComponentRadius = 24.dp
 private val ComponentShape = RoundedCornerShape(ComponentRadius)
 
 @Composable
-fun <T> WangSelectionItem(
+fun <T> WSelectionItem(
     item: T,
     isSelected: Boolean,
     onClick: () -> Unit,
     prefix: (T) -> String,
     label: (T) -> String,
-    subLabel: ((T) -> String),
+    subLabel: ((T) -> String)?,
     modifier: Modifier = Modifier,
 ) {
     val backgroundColor = if (isSelected)
@@ -95,7 +96,7 @@ fun <T> WangSelectionItem(
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "${label(item)} - ${subLabel(item)}",
+                    text = label(item) + if (subLabel != null) " - ${subLabel(item)}" else "",
                     style = MaterialTheme.typography.bodyLarge,
                     color = contentColor
                 )
@@ -115,13 +116,13 @@ fun <T> WangSelectionItem(
 }
 
 @Composable
-fun <T> WangRadioGroup(
+fun <T> WRadioGroup(
     items: List<T>,
     selectedItem: T?,
     onItemSelected: (T) -> Unit,
     prefix: (T) -> String,
     label: (T) -> String,
-    subLabel: ((T) -> String),
+    subLabel: ((T) -> String)?,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -129,7 +130,7 @@ fun <T> WangRadioGroup(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items.forEach { item ->
-            WangSelectionItem(
+            WSelectionItem(
                 item = item,
                 isSelected = item == selectedItem,
                 onClick = { onItemSelected(item) },
@@ -142,7 +143,55 @@ fun <T> WangRadioGroup(
 }
 
 @Composable
-fun <T> WangGridSelectionItem(
+fun WGridSelection(
+    label: String?,
+    items: List<SelectableOption>,
+    onItemSelected: (SelectableOption) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val strings = LocalStrings.current
+    val chunkedItems = items.chunked(3)
+    var selectedGridItem by remember { mutableStateOf(items[0]) }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        label?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+            )
+        }
+
+        chunkedItems.forEach { chunkedItem ->
+            Row(
+                modifier = modifier,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                chunkedItem.forEach { item ->
+                    Box(modifier = Modifier.weight(1f)) {
+                        WGridSelectionItem(
+                            item = item,
+                            isSelected = item == selectedGridItem,
+                            onClick = {
+                                selectedGridItem = item
+                                onItemSelected(selectedGridItem)
+                            },
+                            icon = { it.icon },
+                            label = { it.getLocalizedLabel(strings) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun <T> WGridSelectionItem(
     item: T,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -172,7 +221,7 @@ fun <T> WangGridSelectionItem(
     ) {
         Icon(
             imageVector = icon(item),
-            contentDescription = null,
+            contentDescription = label(item),
             modifier = Modifier.size(24.dp),
             tint = contentColor
         )
@@ -205,60 +254,32 @@ fun SelectablesDarkPreview() {
     }
 }
 
-private data class SampleItem(
-    val id: String,
-    val prefix: String,
-    val label: String,
-    val subLabel: String
-)
-
-private data class GridItem(
-    val id: String,
-    val label: String,
-    val icon: ImageVector
-)
-
 @Composable
 private fun SelectablesPreviewContent() {
-    val items = remember {
-        listOf(
-            SampleItem("1", "Rp", "IDR", "Indonesian Rupiah"),
-            SampleItem("2", "$", "USD", "US Dollar"),
-            SampleItem("3", "€", "EUR", "Euro")
-        )
-    }
-    var selectedItem by remember { mutableStateOf(items[0]) }
-
-    val gridItems = remember {
-        listOf(
-            GridItem("1", "Food", Icons.Rounded.Restaurant),
-            GridItem("2", "Shopping", Icons.Rounded.ShoppingBag),
-            GridItem("3", "Others", Icons.Rounded.Category)
-        )
-    }
-    var selectedGridItem by remember { mutableStateOf(gridItems[0]) }
+    var selectedItem by remember { mutableStateOf(CurrencyType.entries[0]) }
+    var selectedGridItem by remember { mutableStateOf(WalletType.entries[0]) }
 
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Selection Items", style = MaterialTheme.typography.labelLarge)
-        WangRadioGroup(
-            items = items,
+        WRadioGroup(
+            items = CurrencyType.entries,
             selectedItem = selectedItem,
             onItemSelected = { selectedItem = it },
-            prefix = { it.prefix },
+            prefix = { it.id },
             label = { it.label },
-            subLabel = { it.subLabel }
+            subLabel = null
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text("Grid Selection Items", style = MaterialTheme.typography.labelLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            gridItems.forEach { item ->
+            WalletType.entries.forEach { item ->
                 Box(modifier = Modifier.weight(1f)) {
-                    WangGridSelectionItem(
+                    WGridSelectionItem(
                         item = item,
                         isSelected = item == selectedGridItem,
                         onClick = { selectedGridItem = item },
@@ -267,7 +288,7 @@ private fun SelectablesPreviewContent() {
                     )
                 }
             }
-            WangAddButton(onClick = {}, modifier = Modifier.weight(1f))
+            WAddButton(onClick = {}, modifier = Modifier.weight(1f))
         }
     }
 }

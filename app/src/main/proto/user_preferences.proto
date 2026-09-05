@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_package = "com.andikas.wang.data.local";
+option java_multiple_files = true;
+
+message UserPreferencesProto {
+  bool is_onboarding_complete = 1;
+  string currency_code = 2;
+  string language = 3;
+  bool is_fin_unlocked = 4;
+  bool is_biometric_enabled = 5;
+  string pin = 6;
+  string theme = 7;
+  float bubble_position_x = 8;
+  float bubble_position_y = 9;
+}

@@ -250,8 +250,13 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun WangTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    theme: String = "SYSTEM",
+    darkTheme: Boolean = when (theme) {
+        "LIGHT" -> false
+        "DARK" -> true
+        else -> isSystemInDarkTheme()
+    },
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         darkTheme -> darkScheme

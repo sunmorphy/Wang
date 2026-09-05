@@ -1,9 +1,11 @@
 package com.andikas.wang.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,10 +18,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -39,13 +43,15 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cafe.adriel.lyricist.LocalStrings
+import com.andikas.wang.domain.model.vo.CurrencyType
 import com.andikas.wang.ui.theme.WangTheme
 
 private val ButtonRadius = 24.dp
 private val ButtonShape = RoundedCornerShape(ButtonRadius)
 
 @Composable
-fun WangPrimaryButton(
+fun WPrimaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -69,7 +75,7 @@ fun WangPrimaryButton(
 }
 
 @Composable
-fun WangSecondaryButton(
+fun WSecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -93,7 +99,7 @@ fun WangSecondaryButton(
 }
 
 @Composable
-fun WangTonalButton(
+fun WTonalButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -117,7 +123,7 @@ fun WangTonalButton(
 }
 
 @Composable
-fun WangErrorButton(
+fun WErrorButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -141,7 +147,7 @@ fun WangErrorButton(
 }
 
 @Composable
-fun WangOutlinedButton(
+fun WOutlinedButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -167,7 +173,7 @@ fun WangOutlinedButton(
 }
 
 @Composable
-fun WangSurfaceButton(
+fun WSurfaceButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -191,7 +197,7 @@ fun WangSurfaceButton(
 }
 
 @Composable
-fun WangIconButton(
+fun WIconButton(
     imageVector: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -199,7 +205,7 @@ fun WangIconButton(
     enabled: Boolean = true,
     contentDescription: String? = null
 ) {
-    androidx.compose.material3.IconButton(
+    IconButton(
         onClick = onClick,
         modifier = modifier.size(
             if (useBackground) 48.dp else 24.dp
@@ -220,7 +226,7 @@ fun WangIconButton(
 }
 
 @Composable
-fun WangAddButton(
+fun WAddButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -256,10 +262,46 @@ fun WangAddButton(
                     .size(24.dp)
             )
             Text(
-                text = "Add",
+                text = LocalStrings.current.add,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
+    }
+}
+
+@Composable
+fun WCurrencyButton(
+    onClick: () -> Unit,
+    currencyType: CurrencyType,
+    modifier: Modifier = Modifier
+) {
+    BaseButton(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
+        trailingIcon = Icons.Rounded.KeyboardArrowDown
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clip(CircleShape)
+                    .padding(2.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = currencyType.id,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Text(text = currencyType.label, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -345,16 +387,16 @@ private fun ButtonsPreviewContent() {
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        WangPrimaryButton(text = "Primary Button", onClick = {})
-        WangSecondaryButton(text = "Secondary Button", onClick = {})
-        WangTonalButton(text = "Tonal Button", onClick = {})
-        WangErrorButton(text = "Error Button", onClick = {})
-        WangOutlinedButton(text = "Outlined Button", onClick = {})
-        WangSurfaceButton(text = "Surface Button", onClick = {})
-        WangIconButton(imageVector = Icons.Default.Add, onClick = {})
-        WangAddButton(onClick = {})
+        WPrimaryButton(text = "Primary Button", onClick = {})
+        WSecondaryButton(text = "Secondary Button", onClick = {})
+        WTonalButton(text = "Tonal Button", onClick = {})
+        WErrorButton(text = "Error Button", onClick = {})
+        WOutlinedButton(text = "Outlined Button", onClick = {})
+        WSurfaceButton(text = "Surface Button", onClick = {})
+        WIconButton(imageVector = Icons.Default.Add, onClick = {})
+        WAddButton(onClick = {})
 
-        WangPrimaryButton(
+        WPrimaryButton(
             text = "With Icon",
             onClick = {},
             leadingIcon = Icons.Default.Add

@@ -22,7 +22,8 @@ object DatabaseModule {
                 WangDatabase::class.java,
                 "wang.db"
             ).openHelperFactory(factory)
-                .fallbackToDestructiveMigration(false)
+                .addCallback(WangDatabase.CALLBACK)
+                .fallbackToDestructiveMigration(true)
                 .build()
             INSTANCE = instance
             instance
