@@ -50,4 +50,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        val permissionManager = com.andikas.wang.ui.utils.PermissionManager(this)
+        if (permissionManager.hasNotificationListenerPermission() && !com.andikas.wang.service.FinancialNotificationListener.isConnected) {
+            com.andikas.wang.service.FinancialNotificationListener.requestRebindService(this)
+        }
+    }
 }
