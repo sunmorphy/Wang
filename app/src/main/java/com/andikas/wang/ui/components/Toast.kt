@@ -6,11 +6,8 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -22,19 +19,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -46,14 +39,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.lyricist.LocalStrings
+import com.andikas.wang.ui.theme.WangTheme
 import com.andikas.wang.ui.theme.errorContainerDark
 import com.andikas.wang.ui.theme.errorContainerLight
 import com.andikas.wang.ui.theme.errorDark
@@ -89,7 +81,7 @@ data class ToastData(
     val message: String,
     val title: String? = null,
     val type: ToastType = ToastType.INFO,
-    val durationMillis: Long = 3500L,
+    val durationMillis: Long = 3000L,
     val actionLabel: String? = null,
     val onAction: (() -> Unit)? = null
 )
@@ -105,7 +97,7 @@ class ToastHostState {
         message: String,
         type: ToastType = ToastType.INFO,
         title: String? = null,
-        durationMillis: Long = 3500L,
+        durationMillis: Long = 3000L,
         actionLabel: String? = null,
         onAction: (() -> Unit)? = null,
         scope: CoroutineScope
@@ -135,7 +127,7 @@ class ToastHostState {
         message: String,
         title: String? = null,
         scope: CoroutineScope,
-        durationMillis: Long = 3500L
+        durationMillis: Long = 3000L
     ) = showToast(
         message = message,
         type = ToastType.SUCCESS,
@@ -148,7 +140,7 @@ class ToastHostState {
         message: String,
         title: String? = null,
         scope: CoroutineScope,
-        durationMillis: Long = 3500L
+        durationMillis: Long = 3000L
     ) = showToast(
         message = message,
         type = ToastType.WARNING,
@@ -161,7 +153,7 @@ class ToastHostState {
         message: String,
         title: String? = null,
         scope: CoroutineScope,
-        durationMillis: Long = 3500L
+        durationMillis: Long = 3000L
     ) = showToast(
         message = message,
         type = ToastType.ERROR,
@@ -174,7 +166,7 @@ class ToastHostState {
         message: String,
         title: String? = null,
         scope: CoroutineScope,
-        durationMillis: Long = 3500L
+        durationMillis: Long = 3000L
     ) = showToast(
         message = message,
         type = ToastType.INFO,
@@ -214,32 +206,19 @@ fun ToastHost(
         AnimatedVisibility(
             visible = currentData != null,
             enter = slideInVertically(
-                initialOffsetY = { -it * 2 },
+                initialOffsetY = { -it },
                 animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioHighBouncy,
-                    stiffness = Spring.StiffnessMediumLow
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
                 )
-            ) + fadeIn(
-                animationSpec = tween(durationMillis = 200)
-            ) + scaleIn(
-                initialScale = 0.8f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioHighBouncy,
-                    stiffness = Spring.StiffnessMediumLow
-                )
-            ),
+            ) + fadeIn(animationSpec = tween(durationMillis = 180)),
             exit = slideOutVertically(
-                targetOffsetY = { -it * 2 },
-                animationSpec = tween(durationMillis = 250)
-            ) + fadeOut(
-                animationSpec = tween(durationMillis = 200)
-            ) + scaleOut(
-                targetScale = 0.85f,
-                animationSpec = tween(durationMillis = 200)
-            )
+                targetOffsetY = { -it },
+                animationSpec = tween(durationMillis = 180)
+            ) + fadeOut(animationSpec = tween(durationMillis = 180))
         ) {
             currentData?.let { toastData ->
-                CustomToastItem(
+                SimpleToastItem(
                     toastData = toastData,
                     onDismiss = { hostState.dismiss() }
                 )
@@ -249,7 +228,7 @@ fun ToastHost(
 }
 
 @Composable
-private fun CustomToastItem(
+private fun SimpleToastItem(
     toastData: ToastData,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
@@ -262,19 +241,16 @@ private fun CustomToastItem(
             contentColor = if (isDark) successDark else successLight,
             iconVector = Icons.Rounded.CheckCircle
         )
-
         ToastType.WARNING -> ToastStyle(
             backgroundColor = if (isDark) warningContainerDark else warningContainerLight,
             contentColor = if (isDark) warningDark else warningLight,
             iconVector = Icons.Rounded.Warning
         )
-
         ToastType.ERROR -> ToastStyle(
             backgroundColor = if (isDark) errorContainerDark else errorContainerLight,
             contentColor = if (isDark) errorDark else errorLight,
             iconVector = Icons.Rounded.Error
         )
-
         ToastType.INFO -> ToastStyle(
             backgroundColor = if (isDark) infoContainerDark else infoContainerLight,
             contentColor = if (isDark) infoDark else infoLight,
@@ -282,71 +258,57 @@ private fun CustomToastItem(
         )
     }
 
-    Card(
+    Surface(
         modifier = modifier
-            .widthIn(max = 480.dp)
-            .shadow(
-                elevation = 4.dp,
-                shape = RoundedCornerShape(20.dp),
-                clip = false
-            )
-            .clickable { onDismiss() },
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = backgroundColor
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            .widthIn(max = 420.dp)
+            .clickable(onClick = onDismiss),
+        shape = RoundedCornerShape(16.dp),
+        color = backgroundColor,
+        shadowElevation = 3.dp
     ) {
         Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(contentColor.copy(0.1f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = iconVector,
-                    contentDescription = toastData.type.name,
-                    tint = contentColor,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            Icon(
+                imageVector = iconVector,
+                contentDescription = toastData.type.name,
+                tint = contentColor,
+                modifier = Modifier.size(20.dp)
+            )
 
-            val strings = LocalStrings.current
-            val titleText = toastData.title ?: when (toastData.type) {
-                ToastType.SUCCESS -> strings.success
-                ToastType.WARNING -> strings.warning
-                ToastType.ERROR -> strings.error
-                ToastType.INFO -> strings.info
-            }
-
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
-            ) {
-                if (titleText.isNotEmpty()) {
+            if (!toastData.title.isNullOrEmpty()) {
+                Column(
+                    modifier = Modifier.weight(1f, fill = false),
+                    verticalArrangement = Arrangement.Center
+                ) {
                     Text(
-                        text = titleText,
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
+                        text = toastData.title,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp
                         ),
                         color = contentColor
                     )
+                    Text(
+                        text = toastData.message,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 13.sp,
+                            lineHeight = 17.sp
+                        ),
+                        color = contentColor.copy(alpha = 0.9f)
+                    )
                 }
+            } else {
                 Text(
                     text = toastData.message,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp,
-                        lineHeight = 18.sp
+                        fontWeight = FontWeight.Medium
                     ),
-                    color = contentColor
+                    color = contentColor,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
             }
 
@@ -355,26 +317,15 @@ private fun CustomToastItem(
                     onClick = {
                         toastData.onAction.invoke()
                         onDismiss()
-                    }
+                    },
+                    modifier = Modifier.padding(start = 4.dp)
                 ) {
                     Text(
                         text = toastData.actionLabel,
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                         color = contentColor
                     )
                 }
-            }
-
-            IconButton(
-                onClick = onDismiss,
-                modifier = Modifier.size(28.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Close,
-                    contentDescription = "Dismiss",
-                    tint = contentColor.copy(alpha = 0.7f),
-                    modifier = Modifier.size(18.dp)
-                )
             }
         }
     }
@@ -385,3 +336,39 @@ private data class ToastStyle(
     val contentColor: Color,
     val iconVector: ImageVector
 )
+
+@Preview
+@Composable
+private fun SimpleToastItemPreview() {
+    WangTheme {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SimpleToastItem(
+                toastData = ToastData(
+                    message = "Transaction saved successfully!",
+                    type = ToastType.SUCCESS
+                ),
+                onDismiss = {}
+            )
+
+            SimpleToastItem(
+                toastData = ToastData(
+                    title = "Budget Warning",
+                    message = "You have reached 85% of your food budget.",
+                    type = ToastType.WARNING
+                ),
+                onDismiss = {}
+            )
+
+            SimpleToastItem(
+                toastData = ToastData(
+                    message = "Failed to connect to database",
+                    type = ToastType.ERROR
+                ),
+                onDismiss = {}
+            )
+        }
+    }
+}
